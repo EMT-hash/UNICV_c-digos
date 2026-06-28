@@ -303,7 +303,7 @@ choices=nomes
                                     )]
     cliente_vizu = inquirer.prompt(vizu_cliente)
 
-    nome , sobrenome = cliente_vizu['compra'].split(' ',1)
+    nome , sobrenome = cliente_vizu['compra'].split(" ",1) 
 
     cursor.execute(f"""
 SELECT id_cliente
@@ -315,42 +315,26 @@ AND sobrenome = '{sobrenome}'
 
     cliente_id = cursor.fetchone()
 
+
+
     cursor.execute(f"""
-SELECT *
+Select Clientes.nome,Produtos.nome
 FROM Vendas
-WHERE id_cliente = {cliente_id[0]}                   
+INNER JOIN Clientes
+ON Vendas.id_cliente = Clientes.id_cliente
+
+INNER JOIN Produtos
+ON Vendas.id_produto = Produtos.id_produto
+
+WHERE Vendas.id_cliente = {cliente_id[0]}
+           
                    """)
-                   
-    vendas = cursor.fetchall()
+    cliente_produto = cursor.fetchall()
     
-    ids = []
-    for id in vendas:
-        ids.append(id[2])
+    for cliente,produto in cliente_produto:
 
-    vendas_info = []
-    for i in ids:
-
-
-        cursor.execute(f"""
-SELECT nome
-FROM Produtos
-Where id_produto = '{i}'                    
-                   """)
-        infos_vendas = cursor.fetchone()
-        vendas_info.append(infos_vendas)
-
-
-    for resultado, produto in zip(vendas,vendas_info):
-            
-            print(f"""
-    > O cliente {cliente_vizu['compra']} realizou as seguintes compras:        
-    > Produto: {produto[0]}                     
-    > Preço: {resultado[4]}  
-    > Quantidade: {resultado[3]}
-    > Total da Compra: {resultado[5]}
-""")
-
-
+        print(f"{cliente},{produto}")
+    
 
     input("""Pressione 'Enter' para voltar""")
 
