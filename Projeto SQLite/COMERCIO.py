@@ -237,7 +237,6 @@ def atualizar():
             lista_info.append(info[0])
 
         os.system('cls')
-
         att_info = [inquirer.List('info_att',
     message='Escolha oque atualizar',
     choices=lista_info                             
@@ -308,10 +307,11 @@ choices=nomes
     cursor.execute(f"""
 SELECT id_cliente
 FROM Clientes
-WHERE nome = '{nome}'
-AND sobrenome = '{sobrenome}'
-
-                   """)
+WHERE nome = ?
+AND sobrenome = ?
+""",
+(nome,
+ sobrenome))
 
     cliente_id = cursor.fetchone()
 
@@ -352,22 +352,6 @@ Valor Total da Compra: {g[2]}
     input("""Pressione 'Enter' para voltar""")
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
 while True:
     os.system('cls')
     opcao = [inquirer.List('escolha',
